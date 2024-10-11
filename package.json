@@ -1,0 +1,15 @@
+{
+  "name": "som_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/jest/bin/jest.js --verbose",
+    "test-watch": "./node_modules/jest/bin/jest.js --watch --verbose"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^29.7.0"
+  }
+}

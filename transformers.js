@@ -29,7 +29,37 @@ const getInitialWeights = (mapNRows, mapNColumns, featureDimension) =>
     )
   );
 
+const computeVectorDistance = (v1, v2) =>
+  v1.reduce((acc, v1_i, iIndex) => acc + Math.pow((v1_i - v2[iIndex]), 2), 0);
+
+const findBMU = (neuronWeights, inputVector) => {
+  let minDistance = null;
+  let minRowIndex = null;
+  let minColumnIndex = null;
+
+  neuronWeights.forEach((row, rowIndex) => {
+    row.forEach((weights, columnIndex) => {
+      if (rowIndex === 0 && columnIndex === 0) {
+        minDistance = computeVectorDistance(weights, inputVector);
+        minRowIndex = rowIndex;
+        minColumnIndex = columnIndex;
+      } else {
+        distance = computeVectorDistance(weights, inputVector);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          minRowIndex = rowIndex;
+          minColumnIndex = columnIndex;
+        }
+      }
+    });
+  });
+
+  return [minRowIndex, minColumnIndex];
+};
+
 module.exports = {
   normalizeDataSet,
   getInitialWeights,
+  findBMU,
 };

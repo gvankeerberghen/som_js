@@ -1,4 +1,8 @@
-const { normalizeDataSet, getInitialWeights } = require('./transformers');
+const {
+  normalizeDataSet,
+  getInitialWeights,
+  findBMU,
+} = require('./transformers');
 
 const input = [
   {
@@ -32,8 +36,9 @@ const inputWithNormalizedValues = normalizeDataSet(
   normalizedValue: normalizedRow,
 }));
 
+const nFeatures = inputWithNormalizedValues.length;
 const featureDimension = inputWithNormalizedValues[0].values.length;
-const mapSideLength = Math.ceil(Math.sqrt(inputWithNormalizedValues.length));
+const mapSideLength = Math.ceil(Math.sqrt(nFeatures));
 
 const neuronWeights = getInitialWeights(
   mapSideLength,
@@ -41,4 +46,12 @@ const neuronWeights = getInitialWeights(
   featureDimension
 );
 
-console.log(neuronWeights);
+const N_STEPS = 100;
+for (s = 0; s < N_STEPS; s++) {
+  const updateVectorIndex = Math.floor(Math.random() * nFeatures);
+  const updateVectorValues =
+    inputWithNormalizedValues[updateVectorIndex].normalizedValue;
+
+  const [iBMU, jBMU] = findBMU(neuronWeights, updateVectorValues);
+  console.log(iBMU, jBMU);
+}

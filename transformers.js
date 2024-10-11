@@ -22,6 +22,14 @@ const normalizeDataSet = (observations) => {
   );
 };
 
+const getInitialWeights = (mapNRows, mapNColumns, featureDimension) =>
+  Array.from({ length: mapNRows }, () =>
+    Array.from({ length: mapNColumns }, () =>
+      Array.from({ length: featureDimension }, () => Math.random())
+    )
+  );
+
 module.exports = {
   normalizeDataSet,
+  getInitialWeights,
 };

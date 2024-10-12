@@ -25,7 +25,7 @@ const input = [
   },
   {
     id: '5',
-    values: [1, 23, 33, 100, 200, 500, 100, 200, 500, 0.5, 0.49, 0.3, 0.01],
+    values: [1, 2, 3, 100, 200, 500, 100, 200, 500, 0.5, 0.49, 0.3, 0.01],
   },
 ];
 
@@ -46,12 +46,57 @@ const neuronWeights = getInitialWeights(
   featureDimension
 );
 
-const N_STEPS = 100;
+const N_STEPS = 500;
 for (s = 0; s < N_STEPS; s++) {
   const updateVectorIndex = Math.floor(Math.random() * nFeatures);
   const updateVectorValues =
     inputWithNormalizedValues[updateVectorIndex].normalizedValue;
 
   const [iBMU, jBMU] = findBMU(neuronWeights, updateVectorValues);
-  console.log(iBMU, jBMU);
+
+  const learningRate = 0.1 * Math.exp(-s / N_STEPS);
+  for (i = 0; i < mapSideLength; i++) {
+    for (j = 0; j < mapSideLength; j++) {
+      neighbourUpdateWeight =
+        1 / Math.pow(2, Math.abs(i - iBMU) + Math.abs(j - jBMU));
+      neuronWeights[i][j] = neuronWeights[i][j].map(
+        (currentValue, index) =>
+          currentValue +
+          learningRate *
+            neighbourUpdateWeight *
+            (updateVectorValues[index] - currentValue)
+      );
+    }
+  }
+}
+
+const inputWithNormalizedValuesAndIndices = inputWithNormalizedValues.map(
+  (element) => {
+    const [iBMU, jBMU] = findBMU(neuronWeights, element.normalizedValue);
+
+    return {
+      ...element,
+      indices: [iBMU, jBMU],
+    };
+  }
+);
+
+for (i = 0; i < mapSideLength; i++) {
+  let line = '| ';
+
+  for (j = 0; j < mapSideLength; j++) {
+    const matchingFeatures = inputWithNormalizedValuesAndIndices.filter(
+      ({ indices }) => indices[0] === i && indices[1] === j
+    );
+
+    if (matchingFeatures.length > 0) {
+      line += matchingFeatures.map(({id}) => id).join(', ');
+    } else {
+      line += ' ';
+    }
+
+    line += ' | ';
+  }
+
+  console.log(line);
 }

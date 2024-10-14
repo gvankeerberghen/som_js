@@ -46,7 +46,7 @@ const neuronWeights = getInitialWeights(
   featureDimension
 );
 
-const N_STEPS = 500;
+const N_STEPS = 10000;
 for (s = 0; s < N_STEPS; s++) {
   const updateVectorIndex = Math.floor(Math.random() * nFeatures);
   const updateVectorValues =
@@ -54,7 +54,7 @@ for (s = 0; s < N_STEPS; s++) {
 
   const [iBMU, jBMU] = findBMU(neuronWeights, updateVectorValues);
 
-  const learningRate = 0.1 * Math.exp(-s / N_STEPS);
+  const learningRate = Math.exp(-s * 10 / N_STEPS);
   for (i = 0; i < mapSideLength; i++) {
     for (j = 0; j < mapSideLength; j++) {
       neighbourUpdateWeight =
